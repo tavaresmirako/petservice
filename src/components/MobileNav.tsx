@@ -19,11 +19,10 @@ const MobileNav = () => {
       <SheetTrigger asChild>
         <Button 
           variant="ghost" 
-          size="icon" 
-          className="h-10 w-10 border border-white/50 hover:bg-white/20 text-white"
+          className="h-10 w-auto px-3 border border-white/50 hover:bg-white/20 text-white flex items-center gap-2"
         >
+          <span className="text-sm font-bold tracking-wider">MENU</span>
           <Menu className="h-6 w-6" />
-          <span className="sr-only">Toggle navigation menu</span>
         </Button>
       </SheetTrigger>
       <SheetContent 
