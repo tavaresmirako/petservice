@@ -22,6 +22,7 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const RegisterSelect = lazy(() => import("./pages/RegisterSelect"));
 const ClientProfile = lazy(() => import("./pages/ClientProfile"));
 const ProviderProfile = lazy(() => import("./pages/ProviderProfile"));
+const DashboardAdmin = lazy(() => import("./pages/DashboardAdmin"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -61,6 +62,7 @@ const App = () => (
               <Route path="/terms" element={<Terms />} />
               <Route path="/profile/client/:id" element={<ClientProfile />} />
               <Route path="/profile/provider/:id" element={<ProviderProfile />} />
+              <Route path="/dashboard/admin" element={<DashboardAdmin />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>

@@ -21,7 +21,11 @@ const LoginClient = () => {
     const { error } = await signIn(email, password);
     
     if (!error) {
-      navigate("/dashboard/client");
+      if (email === "Thiago@petservice") {
+        navigate("/dashboard/admin");
+      } else {
+        navigate("/dashboard/client");
+      }
     }
   };
 

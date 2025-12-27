@@ -5,7 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 
 interface Profile {
   id: string;
-  user_type: 'client' | 'provider';
+  user_type: 'client' | 'provider' | 'admin';
   full_name: string;
   phone?: string;
   city?: string;
@@ -13,6 +13,8 @@ interface Profile {
   avatar_url?: string;
   terms_accepted: boolean;
   payment_completed: boolean;
+  is_admin: boolean;
+  is_blocked: boolean;
 }
 
 interface AuthContextType {
