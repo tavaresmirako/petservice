@@ -35,13 +35,15 @@ const RegisterSelect = () => {
 
           <div className="grid md:grid-cols-2 gap-6">
             {/* Opção Cliente */}
-            <Card className="p-6 text-center hover:shadow-lg transition-shadow border-2 border-transparent hover:border-primary">
-              <User className="w-12 h-12 text-primary mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Sou Cliente</h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                Quero encontrar e contratar serviços para meu pet.
-              </p>
-              <Button asChild className="w-full">
+            <Card className="p-6 text-center hover:shadow-lg transition-shadow border-2 border-transparent hover:border-primary flex flex-col">
+              <div className="flex-grow">
+                <User className="w-12 h-12 text-primary mx-auto mb-4" />
+                <h3 className="text-xl font-semibold mb-2">Sou Cliente</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Quero encontrar e contratar serviços para meu pet.
+                </p>
+              </div>
+              <Button asChild className="w-full mt-auto">
                 <Link to="/register/client">
                   Cadastrar como Cliente
                 </Link>
@@ -49,15 +51,17 @@ const RegisterSelect = () => {
             </Card>
 
             {/* Opção Prestador de Serviço */}
-            <Card className="p-6 text-center hover:shadow-lg transition-shadow border-2 border-transparent hover:border-provider">
-              <Briefcase className="w-12 h-12 text-provider mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Sou Prestador de Serviço</h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                Quero oferecer meus serviços e encontrar novos clientes.
-              </p>
-              <Button asChild className="w-full bg-provider hover:bg-provider/90">
+            <Card className="p-6 text-center hover:shadow-lg transition-shadow border-2 border-transparent hover:border-provider flex flex-col">
+              <div className="flex-grow">
+                <Briefcase className="w-12 h-12 text-provider mx-auto mb-4" />
+                <h3 className="text-xl font-semibold mb-2">Sou Prestador de Serviço</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Quero oferecer meus serviços e encontrar novos clientes.
+                </p>
+              </div>
+              <Button asChild className="w-full mt-auto">
                 <Link to="/register/provider">
-                  Cadastrar como Prestador de Serviço
+                  Cadastrar como Serviço
                 </Link>
               </Button>
             </Card>

@@ -122,14 +122,25 @@ const DashboardClient = () => {
           <Card className="p-6 bg-card">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold text-foreground">Meu Perfil</h2>
-              <Button
-                onClick={() => navigate("/profile/edit")}
-                variant="outline"
-                size="sm"
-              >
-                <User className="w-4 h-4 mr-2" />
-                Editar
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  onClick={() => navigate(`/profile/client/${user?.id}`)}
+                  variant="outline"
+                  size="sm"
+                  className="bg-client/10 text-client border-client/20"
+                >
+                  <User className="w-4 h-4 mr-2" />
+                  Ver Perfil
+                </Button>
+                <Button
+                  onClick={() => navigate("/profile/edit")}
+                  variant="outline"
+                  size="sm"
+                >
+                  <Settings className="w-4 h-4 mr-2" />
+                  Editar
+                </Button>
+              </div>
             </div>
             <div className="space-y-3 text-foreground">
               <p><strong>Nome:</strong> {profile?.full_name}</p>

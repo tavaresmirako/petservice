@@ -478,7 +478,6 @@ export type Database = {
         | "banho_tosa"
         | "veterinario"
         | "hospedagem"
-        | "pet_shop_delivery"
         | "taxi_pet"
         | "adestramento"
       user_type: "client" | "provider"
@@ -623,7 +622,6 @@ export const Constants = {
         "banho_tosa",
         "veterinario",
         "hospedagem",
-        "pet_shop_delivery",
         "taxi_pet",
         "adestramento",
       ],

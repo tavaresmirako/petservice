@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "@/components/Logo";
 import { ArrowLeft } from "lucide-react";
@@ -19,6 +20,7 @@ const RegisterProvider = () => {
   const { signUp } = useAuth();
   const { toast } = useToast();
   
+  const [documentType, setDocumentType] = useState<"cpf" | "cnpj">("cnpj");
   const [formData, setFormData] = useState({
     fullName: "",
     businessName: "",
@@ -199,18 +201,38 @@ const RegisterProvider = () => {
             </div>
 
             <div className="grid md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="cnpj">CNPJ *</Label>
-                <Input
-                  id="cnpj"
-                  value={formData.cnpj}
-                  onChange={(e) => setFormData({ ...formData, cnpj: e.target.value })}
-                  placeholder="00.000.000/0000-00"
-                  required
-                />
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label>Tipo de Documento *</Label>
+                  <RadioGroup
+                    defaultValue="cnpj"
+                    value={documentType}
+                    onValueChange={(value: "cpf" | "cnpj") => setDocumentType(value)}
+                    className="flex gap-4"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="cnpj" id="cnpj-type" />
+                      <Label htmlFor="cnpj-type" className="font-normal">CNPJ</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="cpf" id="cpf-type" />
+                      <Label htmlFor="cpf-type" className="font-normal">CPF</Label>
+                    </div>
+                  </RadioGroup>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="cnpj">{documentType === "cnpj" ? "CNPJ" : "CPF"} *</Label>
+                  <Input
+                    id="cnpj"
+                    value={formData.cnpj}
+                    onChange={(e) => setFormData({ ...formData, cnpj: e.target.value })}
+                    placeholder={documentType === "cnpj" ? "00.000.000/0000-00" : "000.000.000-00"}
+                    required
+                  />
+                </div>
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-2 flex flex-col justify-end">
                 <Label htmlFor="phone">Telefone *</Label>
                 <Input
                   id="phone"

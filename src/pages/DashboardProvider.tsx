@@ -159,21 +159,32 @@ const DashboardProvider = () => {
           <Card className="p-6 bg-card">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold text-foreground">Perfil Profissional</h2>
-              <Button
-                onClick={() => navigate("/provider/profile/edit")}
-                variant="outline"
-                size="sm"
-              >
-                <Settings className="w-4 h-4 mr-2" />
-                Editar
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  onClick={() => navigate(`/profile/provider/${user?.id}`)}
+                  variant="outline"
+                  size="sm"
+                  className="bg-provider/10 text-provider border-provider/20"
+                >
+                  <User className="w-4 h-4 mr-2" />
+                  Ver Perfil
+                </Button>
+                <Button
+                  onClick={() => navigate("/provider/profile/edit")}
+                  variant="outline"
+                  size="sm"
+                >
+                  <Settings className="w-4 h-4 mr-2" />
+                  Editar
+                </Button>
+              </div>
             </div>
             <div className="space-y-3 text-foreground">
               <p><strong>Nome:</strong> {profile?.full_name}</p>
               {providerData?.business_name && (
                 <p><strong>Empresa:</strong> {providerData.business_name}</p>
               )}
-              <p><strong>CNPJ:</strong> {providerData?.cnpj}</p>
+              <p><strong>Documento:</strong> {providerData?.cnpj}</p>
               {profile?.city && profile?.state && (
                 <p><strong>Localização:</strong> {profile.city}, {profile.state}</p>
               )}

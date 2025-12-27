@@ -17,6 +17,8 @@ import SearchProviders from "./pages/SearchProviders";
 import Terms from "./pages/Terms";
 import NotFound from "./pages/NotFound";
 import RegisterSelect from "./pages/RegisterSelect";
+import ClientProfile from "./pages/ClientProfile";
+import ProviderProfile from "./pages/ProviderProfile";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +42,8 @@ const App = () => (
             <Route path="/dashboard/provider" element={<DashboardProvider />} />
             <Route path="/search" element={<SearchProviders />} />
             <Route path="/terms" element={<Terms />} />
+            <Route path="/profile/client/:id" element={<ClientProfile />} />
+            <Route path="/profile/provider/:id" element={<ProviderProfile />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

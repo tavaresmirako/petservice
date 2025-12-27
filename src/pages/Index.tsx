@@ -19,13 +19,13 @@ import {
 
 const Index = () => {
   const services = [
-    { icon: Dog, title: "Passeio Pet", description: "Passeios seguros e divertidos" },
-    { icon: Bath, title: "Banho e Tosa", description: "Cuidados especializados" },
-    { icon: Stethoscope, title: "Veterinário", description: "Cuidados médicos para seu pet" },
-    { icon: Car, title: "Táxi Pet", description: "Transporte seguro" },
+    { icon: Dog, title: "Passeio Pet", description: "Passeios seguros e divertidos", category: "passeio" },
+    { icon: Bath, title: "Banho e Tosa", description: "Cuidados especializados", category: "banho_tosa" },
+    { icon: Stethoscope, title: "Veterinário", description: "Cuidados médicos para seu pet", category: "veterinario" },
+    { icon: Car, title: "Táxi Pet", description: "Transporte seguro", category: "taxi_pet" },
     { icon: null, title: "", description: "", hidden: true },
-    { icon: GraduationCap, title: "Adestramento", description: "Treinamento profissional" },
-    { icon: Home, title: "Hospedagem", description: "Aconchego e segurança" },
+    { icon: GraduationCap, title: "Adestramento", description: "Treinamento profissional", category: "adestramento" },
+    { icon: Home, title: "Hospedagem", description: "Aconchego e segurança", category: "hospedagem" },
   ];
 
   return (
@@ -101,18 +101,23 @@ const Index = () => {
               }
               const Icon = service.icon;
               return (
-                <Card 
+                <Link 
                   key={index} 
-                  className="p-6 text-center card-neon-hover cursor-pointer group bg-white/60 dark:bg-black/40 backdrop-blur-md border-2 border-transparent"
+                  to={`/search?category=${service.category}`}
+                  className="block"
                 >
-                  <div className="flex justify-center mb-3">
-                    <div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
-                      {Icon && <Icon className="w-8 h-8 text-accent" />}
+                  <Card 
+                    className="p-6 text-center card-neon-hover cursor-pointer group bg-white/60 dark:bg-black/40 backdrop-blur-md border-2 border-transparent h-full"
+                  >
+                    <div className="flex justify-center mb-3">
+                      <div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
+                        {Icon && <Icon className="w-8 h-8 text-accent" />}
+                      </div>
                     </div>
-                  </div>
-                  <h4 className="font-semibold mb-1">{service.title}</h4>
-                  <p className="text-sm text-muted-foreground">{service.description}</p>
-                </Card>
+                    <h4 className="font-semibold mb-1">{service.title}</h4>
+                    <p className="text-sm text-muted-foreground">{service.description}</p>
+                  </Card>
+                </Link>
               );
             })}
           </div>

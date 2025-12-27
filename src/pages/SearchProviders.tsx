@@ -7,14 +7,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import Logo from "@/components/Logo";
 import { Search, Star, MapPin, LogOut, Heart, MessageSquare } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 const categoryNames: Record<string, string> = {
   passeio: "Passeio Pet",
   banho_tosa: "Banho e Tosa",
   veterinario: "Veterinário",
   hospedagem: "Hospedagem",
-  pet_shop_delivery: "Pet Shop Delivery",
   taxi_pet: "Táxi Pet",
   adestramento: "Adestramento",
 };
@@ -22,14 +21,19 @@ const categoryNames: Record<string, string> = {
 const SearchProviders = () => {
   const { user, profile, signOut } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [providers, setProviders] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedCity, setSelectedCity] = useState<string>("all");
 
   useEffect(() => {
+    const categoryParam = searchParams.get("category");
+    if (categoryParam && categoryNames[categoryParam]) {
+      setSelectedCategory(categoryParam);
+    }
     fetchProviders();
-  }, []);
+  }, [searchParams]);
 
   const fetchProviders = async () => {
     const { data, error } = await supabase
@@ -78,13 +82,7 @@ const SearchProviders = () => {
         <div className="container mx-auto px-4 flex justify-between items-center">
           <Logo />
           <div className="flex items-center gap-4">
-            <Button
-              onClick={() => navigate("/dashboard/client")}
-              variant="outline"
-              className="bg-white/10 text-white border-white/20 hover:bg-white/20"
-            >
-              Dashboard
-            </Button>
+
             <Button
               onClick={handleSignOut}
               variant="outline"
@@ -118,7 +116,7 @@ const SearchProviders = () => {
               <SelectTrigger className="bg-white/50 dark:bg-black/20">
                 <SelectValue placeholder="Categoria" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent position="popper" className="z-[100]">
                 <SelectItem value="all">Todas as categorias</SelectItem>
                 {Object.entries(categoryNames).map(([key, name]) => (
                   <SelectItem key={key} value={key}>
@@ -132,7 +130,7 @@ const SearchProviders = () => {
               <SelectTrigger className="bg-white/50 dark:bg-black/20">
                 <SelectValue placeholder="Cidade" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent position="popper" className="z-[100]">
                 <SelectItem value="all">Todas as cidades</SelectItem>
                 {cities.map((city) => (
                   <SelectItem key={city} value={city}>
@@ -174,7 +172,7 @@ const SearchProviders = () => {
                   )}
 
                   <p className="text-xs text-muted-foreground">
-                    CNPJ: {provider.cnpj}
+                    Documento: {provider.cnpj}
                   </p>
 
                   {provider.review_count > 0 && (
@@ -187,7 +185,7 @@ const SearchProviders = () => {
                 <div className="flex gap-2">
                   <Button
                     className="flex-1 btn-theme-adaptive"
-                    onClick={() => navigate(`/provider/${provider.id}`)}
+                    onClick={() => navigate(`/profile/provider/${provider.id}`)}
                   >
                     Ver Perfil
                   </Button>
