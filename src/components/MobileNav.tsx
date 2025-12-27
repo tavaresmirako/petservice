@@ -20,11 +20,7 @@ const MobileNav = () => {
         <Button 
           variant="ghost" 
           size="icon" 
-          className="h-10 w-10 border transition-all duration-300"
-          style={{ 
-            borderColor: 'var(--nav-btn-border)',
-            color: 'var(--header-text)'
-          }}
+          className="h-10 w-10 border border-white/50 hover:bg-white/20 text-white"
         >
           <Menu className="h-6 w-6" />
           <span className="sr-only">Toggle navigation menu</span>

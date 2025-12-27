@@ -30,13 +30,10 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-transparent relative">
-      {/* Header Reativo ao Tema */}
+      {/* Header Original Restaurado */}
       <header 
-        className="py-6 shadow-md relative z-10 transition-colors duration-300"
-        style={{ 
-          backgroundColor: 'var(--header-bg)',
-          color: 'var(--header-text)'
-        }}
+        className="py-6 shadow-md relative z-10"
+        style={{ background: 'var(--gradient-header)' }}
       >
         <div className="container mx-auto px-4 flex justify-between items-center">
           <Logo />
