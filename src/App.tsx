@@ -23,6 +23,8 @@ const RegisterSelect = lazy(() => import("./pages/RegisterSelect"));
 const ClientProfile = lazy(() => import("./pages/ClientProfile"));
 const ProviderProfile = lazy(() => import("./pages/ProviderProfile"));
 const DashboardAdmin = lazy(() => import("./pages/DashboardAdmin"));
+const PasswordRecovery = lazy(() => import("./pages/PasswordRecovery"));
+const UpdatePassword = lazy(() => import("./pages/UpdatePassword"));
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -63,6 +65,8 @@ const App = () => (
               <Route path="/profile/client/:id" element={<ClientProfile />} />
               <Route path="/profile/provider/:id" element={<ProviderProfile />} />
               <Route path="/dashboard/admin" element={<DashboardAdmin />} />
+              <Route path="/auth/recover" element={<PasswordRecovery />} />
+              <Route path="/auth/update-password" element={<UpdatePassword />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>

@@ -84,13 +84,23 @@ const LoginClient = () => {
               />
             </div>
 
-            <Button 
-              type="submit" 
-              className="w-full btn-theme-adaptive"
-              size="lg"
-            >
-              Entrar
-            </Button>
+            <div className="space-y-4">
+              <Button 
+                type="submit" 
+                className="w-full btn-theme-adaptive"
+                size="lg"
+              >
+                Entrar
+              </Button>
+              <div className="text-center">
+                <Link 
+                  to="/auth/recover" 
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                >
+                  Esqueci minha senha
+                </Link>
+              </div>
+            </div>
           </form>
 
           <div className="mt-6 text-center">
