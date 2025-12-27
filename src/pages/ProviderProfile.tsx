@@ -7,8 +7,10 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import Logo from "@/components/Logo";
 import { ArrowLeft, MapPin, Phone, Star, Instagram, Facebook, Youtube, Briefcase, MessageSquare } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
 const ProviderProfile = () => {
+  const { toast } = useToast();
   const { id } = useParams();
   const navigate = useNavigate();
   const { user: currentUser } = useAuth();
@@ -159,11 +161,41 @@ const ProviderProfile = () => {
                 )}
               </div>
 
-              <div className="mt-6 space-y-2">
-                <Button className="w-full bg-provider hover:bg-provider/90">
-                  <MessageSquare className="w-4 h-4 mr-2" />
-                  Enviar Mensagem
-                </Button>
+<div className="mt-6 space-y-2">
+	                <Button 
+	                  className="w-full bg-provider hover:bg-provider/90"
+	                  onClick={async () => {
+	                    if (!currentUser) {
+	                      navigate("/login/client");
+	                      return;
+	                    }
+	                    
+	                    const { error } = await supabase.from("service_requests").insert([
+	                      {
+	                        client_id: currentUser.id,
+	                        provider_id: id,
+	                        status: 'pending',
+	                        message: 'Olá, gostaria de solicitar um serviço.'
+	                      }
+	                    ]);
+
+	                    if (error) {
+	                      toast({
+	                        title: "Erro",
+	                        description: "Não foi possível enviar a solicitação.",
+	                        variant: "destructive",
+	                      });
+	                    } else {
+	                      toast({
+	                        title: "Solicitação Enviada!",
+	                        description: "O prestador será notificado em tempo real.",
+	                      });
+	                    }
+	                  }}
+	                >
+	                  <MessageSquare className="w-4 h-4 mr-2" />
+	                  Solicitar Serviço
+	                </Button>
                 {currentUser?.id === id && (
                   <Button 
                     variant="outline"

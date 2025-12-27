@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Logo from "@/components/Logo";
 import { Heart, MessageSquare, Search, LogOut, User, Dog } from "lucide-react";
+import ClientChatListener from "@/components/ClientChatListener";
 import { supabase } from "@/integrations/supabase/client";
 
 const DashboardClient = () => {
@@ -56,9 +57,10 @@ const DashboardClient = () => {
       >
         <div className="container mx-auto px-4 flex justify-between items-center">
           <Logo />
-          <div className="flex items-center gap-4">
-            <span className="text-white">Olá, {profile?.full_name}</span>
-            <Button
+<div className="flex items-center gap-4">
+	            <ClientChatListener />
+	            <span className="text-white">Olá, {profile?.full_name}</span>
+	            <Button
               onClick={handleSignOut}
               variant="outline"
               className="bg-white/10 text-white border-white/20 hover:bg-white/20"
