@@ -24,8 +24,8 @@ const Index = () => {
     { icon: Stethoscope, title: "Veterinário", description: "Cuidados médicos para seu pet" },
     { icon: Car, title: "Táxi Pet", description: "Transporte seguro" },
     { icon: null, title: "", description: "", hidden: true }, // Espaço vazio para manter o alinhamento
-    { icon: GraduationCap, title: "Adestramento", description: "Treinamento profissional" }, // Adestramento no lugar do Creche Pet
-    { icon: Home, title: "Hospedagem", description: "Aconchego e segurança" }, // Hospedagem continua na 7ª posição (abaixo do Veterinário)
+    { icon: GraduationCap, title: "Adestramento", description: "Treinamento profissional" },
+    { icon: Home, title: "Hospedagem", description: "Aconchego e segurança" },
   ];
 
   return (
@@ -123,6 +123,17 @@ const Index = () => {
       <footer className="bg-white/60 dark:bg-black/40 backdrop-blur-md py-8 mt-20 border-t relative z-10">
         <div className="container mx-auto px-4 text-center text-muted-foreground">
           <p>© 2025 PetServices - Conectando donos de pets a prestadores qualificados</p>
+          <p className="mt-2">
+            Desenvolvido por{" "}
+            <a 
+              href="https://www.linkedin.com/in/thiago-tavares-6328936a/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-primary hover:underline font-semibold transition-all"
+            >
+              Thiago Tavares
+            </a>
+          </p>
         </div>
       </footer>
     </div>
