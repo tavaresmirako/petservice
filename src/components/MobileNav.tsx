@@ -7,7 +7,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 const navItems = [
   { name: "Cadastrar", href: "/register" },
   { name: "Entrar", href: "/login/client" },
-  { name: "Sou Prestador de Serviço", href: "/login/provider" },
+  { name: "Sou Prestador", href: "/login/provider" },
   { name: "Serviços", href: "/search" },
 ];
 
@@ -28,7 +28,7 @@ const MobileNav = () => {
       </SheetTrigger>
       <SheetContent 
         side="right" 
-        className="w-[250px] border-l border-border transition-colors duration-300"
+        className="w-[150px] border-l border-border transition-all duration-300 p-4"
         style={{ 
           backgroundColor: 'var(--bg-start)',
           color: 'var(--text-color)'
@@ -36,18 +36,18 @@ const MobileNav = () => {
       >
         <SheetHeader>
           <SheetTitle 
-            className="border-b pb-2 text-left"
+            className="border-b pb-2 text-left text-sm font-bold"
             style={{ color: 'var(--text-color)' }}
           >
             Menu
           </SheetTitle>
         </SheetHeader>
-        <nav className="flex flex-col gap-4 mt-6">
+        <nav className="flex flex-col gap-3 mt-4">
           {navItems.map((item) => (
             <Link
               key={item.name}
               to={item.href}
-              className="text-lg font-medium transition-colors p-2 rounded-md hover:bg-black/5 dark:hover:bg-white/5"
+              className="text-xs font-medium transition-colors p-1.5 rounded-md hover:bg-black/5 dark:hover:bg-white/5"
               style={{ color: 'var(--text-color)' }}
               onClick={() => setIsOpen(false)}
             >
