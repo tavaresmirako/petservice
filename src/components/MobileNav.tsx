@@ -28,7 +28,7 @@ const MobileNav = () => {
       </SheetTrigger>
       <SheetContent 
         side="right" 
-        className="w-[150px] border-l border-border transition-all duration-300 p-4"
+        className="w-[160px] h-fit max-h-[400px] my-auto top-0 bottom-0 border border-border rounded-l-2xl shadow-2xl transition-all duration-300 p-4 overflow-hidden"
         style={{ 
           backgroundColor: 'var(--bg-start)',
           color: 'var(--text-color)'
@@ -42,12 +42,12 @@ const MobileNav = () => {
             Menu
           </SheetTitle>
         </SheetHeader>
-        <nav className="flex flex-col gap-3 mt-4">
+        <nav className="flex flex-col gap-2 mt-4">
           {navItems.map((item) => (
             <Link
               key={item.name}
               to={item.href}
-              className="text-xs font-medium transition-colors p-1.5 rounded-md hover:bg-black/5 dark:hover:bg-white/5"
+              className="text-xs font-bold transition-all duration-200 p-2 rounded-lg hover:bg-primary/10 hover:text-primary hover:pl-3"
               style={{ color: 'var(--text-color)' }}
               onClick={() => setIsOpen(false)}
             >
