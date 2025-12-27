@@ -1,3 +1,4 @@
+import { Suspense, lazy } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -6,21 +7,36 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
 import AnimatedBackground from "./components/AnimatedBackground";
 import ThemeToggle from "./components/ThemeToggle";
-import Index from "./pages/Index";
-import LoginClient from "./pages/LoginClient";
-import LoginProvider from "./pages/LoginProvider";
-import RegisterClient from "./pages/RegisterClient";
-import RegisterProvider from "./pages/RegisterProvider";
-import DashboardClient from "./pages/DashboardClient";
-import DashboardProvider from "./pages/DashboardProvider";
-import SearchProviders from "./pages/SearchProviders";
-import Terms from "./pages/Terms";
-import NotFound from "./pages/NotFound";
-import RegisterSelect from "./pages/RegisterSelect";
-import ClientProfile from "./pages/ClientProfile";
-import ProviderProfile from "./pages/ProviderProfile";
 
-const queryClient = new QueryClient();
+// Lazy loading das páginas para otimização de bundle
+const Index = lazy(() => import("./pages/Index"));
+const LoginClient = lazy(() => import("./pages/LoginClient"));
+const LoginProvider = lazy(() => import("./pages/LoginProvider"));
+const RegisterClient = lazy(() => import("./pages/RegisterClient"));
+const RegisterProvider = lazy(() => import("./pages/RegisterProvider"));
+const DashboardClient = lazy(() => import("./pages/DashboardClient"));
+const DashboardProvider = lazy(() => import("./pages/DashboardProvider"));
+const SearchProviders = lazy(() => import("./pages/SearchProviders"));
+const Terms = lazy(() => import("./pages/Terms"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const RegisterSelect = lazy(() => import("./pages/RegisterSelect"));
+const ClientProfile = lazy(() => import("./pages/ClientProfile"));
+const ProviderProfile = lazy(() => import("./pages/ProviderProfile"));
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
+
+const LoadingFallback = () => (
+  <div className="min-h-screen flex items-center justify-center bg-background">
+    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+  </div>
+);
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -31,22 +47,23 @@ const App = () => (
         <AnimatedBackground />
         <ThemeToggle />
         <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/register" element={<RegisterSelect />} />
-            <Route path="/login/client" element={<LoginClient />} />
-            <Route path="/login/provider" element={<LoginProvider />} />
-            <Route path="/register/client" element={<RegisterClient />} />
-            <Route path="/register/provider" element={<RegisterProvider />} />
-            <Route path="/dashboard/client" element={<DashboardClient />} />
-            <Route path="/dashboard/provider" element={<DashboardProvider />} />
-            <Route path="/search" element={<SearchProviders />} />
-            <Route path="/terms" element={<Terms />} />
-            <Route path="/profile/client/:id" element={<ClientProfile />} />
-            <Route path="/profile/provider/:id" element={<ProviderProfile />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <Suspense fallback={<LoadingFallback />}>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/register" element={<RegisterSelect />} />
+              <Route path="/login/client" element={<LoginClient />} />
+              <Route path="/login/provider" element={<LoginProvider />} />
+              <Route path="/register/client" element={<RegisterClient />} />
+              <Route path="/register/provider" element={<RegisterProvider />} />
+              <Route path="/dashboard/client" element={<DashboardClient />} />
+              <Route path="/dashboard/provider" element={<DashboardProvider />} />
+              <Route path="/search" element={<SearchProviders />} />
+              <Route path="/terms" element={<Terms />} />
+              <Route path="/profile/client/:id" element={<ClientProfile />} />
+              <Route path="/profile/provider/:id" element={<ProviderProfile />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
         </BrowserRouter>
       </TooltipProvider>
     </AuthProvider>

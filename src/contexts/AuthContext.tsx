@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from "react";
 import { User, Session } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -35,71 +35,80 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  const fetchProfile = async (userId: string) => {
-    const { data, error } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", userId)
-      .maybeSingle();
+  const fetchProfile = useCallback(async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", userId)
+        .maybeSingle();
 
-    if (error) {
+      if (error) throw error;
+      return data;
+    } catch (error) {
       console.error("Error fetching profile:", error);
       return null;
     }
-    return data;
-  };
+  }, []);
 
-  const refreshProfile = async () => {
+  const refreshProfile = useCallback(async () => {
     if (user) {
       const profileData = await fetchProfile(user.id);
       setProfile(profileData);
     }
-  };
+  }, [user, fetchProfile]);
 
+  // Efeito principal para monitorar a sessão e carregar o perfil
   useEffect(() => {
-    // Set up auth state listener
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
+    let mounted = true;
+
+    const initializeAuth = async () => {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
         
-        if (session?.user) {
-          setTimeout(async () => {
+        if (mounted) {
+          setSession(session);
+          setUser(session?.user ?? null);
+          
+          if (session?.user) {
             const profileData = await fetchProfile(session.user.id);
-            setProfile(profileData);
-            setLoading(false);
-          }, 0);
-        } else {
-          setProfile(null);
+            if (mounted) setProfile(profileData);
+          }
+        }
+      } catch (error) {
+        console.error("Auth initialization error:", error);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+
+    initializeAuth();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (event, currentSession) => {
+        if (mounted) {
+          setSession(currentSession);
+          setUser(currentSession?.user ?? null);
+          
+          if (currentSession?.user) {
+            const profileData = await fetchProfile(currentSession.user.id);
+            if (mounted) setProfile(profileData);
+          } else {
+            setProfile(null);
+          }
           setLoading(false);
         }
       }
     );
 
-    // Check for existing session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      
-      if (session?.user) {
-        fetchProfile(session.user.id).then((profileData) => {
-          setProfile(profileData);
-          setLoading(false);
-        });
-      } else {
-        setLoading(false);
-      }
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
+  }, [fetchProfile]);
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
       toast({
         title: "Erro ao fazer login",
@@ -107,19 +116,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         variant: "destructive",
       });
     }
-
     return { error };
   };
 
   const signUp = async (email: string, password: string, userData: any) => {
-    const redirectUrl = `${window.location.origin}/`;
-    
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
-      options: {
-        emailRedirectTo: redirectUrl,
-      },
+      options: { emailRedirectTo: `${window.location.origin}/` },
     });
 
     if (authError) {
@@ -159,16 +163,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{
-        user,
-        session,
-        profile,
-        loading,
-        signIn,
-        signUp,
-        signOut,
-        refreshProfile,
-      }}
+      value={{ user, session, profile, loading, signIn, signUp, signOut, refreshProfile }}
     >
       {children}
     </AuthContext.Provider>

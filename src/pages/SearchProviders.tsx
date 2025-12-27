@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -18,6 +18,16 @@ const categoryNames: Record<string, string> = {
   adestramento: "Adestramento",
 };
 
+// Hook simples de debounce para evitar dependências externas pesadas
+function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+  useEffect(() => {
+    const handler = setTimeout(() => setDebouncedValue(value), delay);
+    return () => clearTimeout(handler);
+  }, [value, delay]);
+  return debouncedValue;
+}
+
 const SearchProviders = () => {
   const { signOut } = useAuth();
   const navigate = useNavigate();
@@ -25,6 +35,9 @@ const SearchProviders = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedCity, setSelectedCity] = useState<string>("all");
+
+  // Debounce do termo de busca para performance
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
   const { data: providers = [], isLoading, isError } = useSearchProviders(selectedCity, selectedCategory);
 
@@ -35,17 +48,22 @@ const SearchProviders = () => {
     }
   }, [searchParams]);
 
-  const filteredProviders = providers.filter((provider: any) => {
-    const nameToSearch = (provider.business_name || provider.name || "").toLowerCase();
-    return nameToSearch.includes(searchTerm.toLowerCase());
-  });
+  // Otimização com useMemo para evitar cálculos desnecessários
+  const filteredProviders = useMemo(() => {
+    return providers.filter((provider: any) => {
+      const nameToSearch = (provider.business_name || provider.name || "").toLowerCase();
+      return nameToSearch.includes(debouncedSearchTerm.toLowerCase());
+    });
+  }, [providers, debouncedSearchTerm]);
 
-  const cities = [...new Set(providers.map((p: any) => p.city).filter(Boolean))];
+  const cities = useMemo(() => {
+    return [...new Set(providers.map((p: any) => p.city).filter(Boolean))];
+  }, [providers]);
 
-  const handleSignOut = async () => {
+  const handleSignOut = useCallback(async () => {
     await signOut();
     navigate("/");
-  };
+  }, [signOut, navigate]);
 
   return (
     <div className="min-h-screen bg-transparent relative">
