@@ -6,8 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Logo from "@/components/Logo";
 import { Search, Star, MapPin, LogOut, Heart, MessageSquare } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchProviders } from "@/hooks/useSearchProviders";
 
 const categoryNames: Record<string, string> = {
   passeio: "Passeio Pet",
@@ -19,13 +19,14 @@ const categoryNames: Record<string, string> = {
 };
 
 const SearchProviders = () => {
-  const { user, profile, signOut } = useAuth();
+  const { signOut } = useAuth();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [providers, setProviders] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedCity, setSelectedCity] = useState<string>("all");
+
+  const { data: providers = [], isLoading, isError } = useSearchProviders(selectedCity, selectedCategory);
 
   useEffect(() => {
     const categoryParam = searchParams.get("category");
@@ -34,69 +35,12 @@ const SearchProviders = () => {
     }
   }, [searchParams]);
 
-  useEffect(() => {
-    fetchProviders();
-  }, [selectedCategory, selectedCity]);
-
-  const fetchProviders = async () => {
-    // Se houver uma categoria selecionada, usamos a RPC otimizada
-    if (selectedCategory !== "all") {
-      const { data, error } = await supabase.rpc('search_providers_optimized', {
-        p_category: selectedCategory,
-        p_city: selectedCity === "all" ? null : selectedCity
-      });
-
-      if (!error && data) {
-        // Mapear os dados da RPC para o formato esperado pelo componente
-        const mappedData = data.map((item: any) => ({
-          id: item.provider_id,
-          business_name: item.name,
-          rating: item.rating,
-          review_count: item.review_count,
-          profiles: {
-            full_name: item.name,
-            city: item.city,
-            state: "" // A RPC não retorna o estado, mas podemos ajustar se necessário
-          },
-          services: [{ category: selectedCategory }]
-        }));
-        setProviders(mappedData);
-        return;
-      }
-    }
-
-    // Fallback para busca geral se nenhuma categoria estiver selecionada ou se a RPC falhar
-    const { data, error } = await supabase
-      .from("providers")
-      .select(`
-        *,
-        profiles!providers_id_fkey(full_name, city, state, phone),
-        services(category)
-      `);
-
-    if (!error && data) {
-      setProviders(data);
-    }
-  };
-
-  const filteredProviders = providers.filter((provider) => {
-    const matchesSearch = 
-      provider.business_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      provider.profiles?.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      provider.description?.toLowerCase().includes(searchTerm.toLowerCase());
-
-    const matchesCategory = 
-      selectedCategory === "all" ||
-      provider.services?.some((s: any) => s.category === selectedCategory);
-
-    const matchesCity =
-      selectedCity === "all" ||
-      provider.profiles?.city === selectedCity;
-
-    return matchesSearch && matchesCategory && matchesCity;
+  const filteredProviders = providers.filter((provider: any) => {
+    const nameToSearch = (provider.business_name || provider.name || "").toLowerCase();
+    return nameToSearch.includes(searchTerm.toLowerCase());
   });
 
-  const cities = [...new Set(providers.map((p) => p.profiles?.city).filter(Boolean))];
+  const cities = [...new Set(providers.map((p: any) => p.city).filter(Boolean))];
 
   const handleSignOut = async () => {
     await signOut();
@@ -112,7 +56,6 @@ const SearchProviders = () => {
         <div className="container mx-auto px-4 flex justify-between items-center">
           <Logo />
           <div className="flex items-center gap-4">
-
             <Button
               onClick={handleSignOut}
               variant="outline"
@@ -135,7 +78,7 @@ const SearchProviders = () => {
             <div className="relative">
               <Search className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
               <Input
-                placeholder="Buscar por nome ou descrição..."
+                placeholder="Buscar por nome..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10 bg-white/50 dark:bg-black/20"
@@ -162,7 +105,7 @@ const SearchProviders = () => {
               </SelectTrigger>
               <SelectContent position="popper" className="z-[100]">
                 <SelectItem value="all">Todas as cidades</SelectItem>
-                {cities.map((city) => (
+                {cities.map((city: any) => (
                   <SelectItem key={city} value={city}>
                     {city}
                   </SelectItem>
@@ -172,72 +115,64 @@ const SearchProviders = () => {
           </div>
         </Card>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProviders.map((provider) => (
-            <Card key={provider.id} className="overflow-hidden hover:shadow-lg transition-all bg-white/60 dark:bg-black/40 backdrop-blur-md">
-              <div className="p-6">
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <h3 className="text-xl font-bold text-foreground">
-                      {provider.business_name || provider.profiles?.full_name}
-                    </h3>
-                    <p className="text-sm text-muted-foreground">{provider.profiles?.full_name}</p>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
-                    <span className="font-semibold text-foreground">
-                      {provider.rating?.toFixed(1) || "Novo"}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="space-y-2 mb-4 text-foreground">
-                  <p className="text-sm line-clamp-2">{provider.description || "Sem descrição"}</p>
-                  
-                  {provider.profiles?.city && (
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <MapPin className="w-4 h-4" />
-                      <span>{provider.profiles.city}, {provider.profiles.state}</span>
+        {isLoading ? (
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          </div>
+        ) : isError ? (
+          <div className="text-center text-red-500 py-12">
+            Erro ao carregar profissionais. Por favor, tente novamente.
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredProviders.map((provider: any) => (
+              <Card key={provider.provider_id} className="overflow-hidden hover:shadow-lg transition-all bg-white/60 dark:bg-black/40 backdrop-blur-md">
+                <div className="p-6">
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <h3 className="text-xl font-bold text-foreground">
+                        {provider.business_name || provider.name}
+                      </h3>
+                      <p className="text-sm text-muted-foreground flex items-center mt-1">
+                        <MapPin className="w-3 h-3 mr-1" />
+                        {provider.city}, {provider.state}
+                      </p>
                     </div>
-                  )}
+                    <div className="flex items-center gap-1">
+                      <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
+                      <span className="font-semibold text-foreground">
+                        {provider.rating?.toFixed(1) || "Novo"}
+                      </span>
+                    </div>
+                  </div>
 
-                  <p className="text-xs text-muted-foreground">
-                    Documento: {provider.cnpj}
-                  </p>
-
-                  {provider.review_count > 0 && (
-                    <p className="text-xs text-muted-foreground">
-                      {provider.review_count} {provider.review_count === 1 ? "avaliação" : "avaliações"}
-                    </p>
-                  )}
+                  <div className="flex gap-2 mt-6">
+                    <Button
+                      className="flex-1 btn-theme-adaptive"
+                      onClick={() => navigate(`/profile/provider/${provider.provider_id}`)}
+                    >
+                      Ver Perfil
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="border-client text-client hover:bg-client/10"
+                    >
+                      <Heart className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="border-client text-client hover:bg-client/10"
+                    >
+                      <MessageSquare className="w-4 h-4" />
+                    </Button>
+                  </div>
                 </div>
-
-                <div className="flex gap-2">
-                  <Button
-                    className="flex-1 btn-theme-adaptive"
-                    onClick={() => navigate(`/profile/provider/${provider.id}`)}
-                  >
-                    Ver Perfil
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="border-client text-client hover:bg-client/10"
-                  >
-                    <Heart className="w-4 h-4" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="border-client text-client hover:bg-client/10"
-                  >
-                    <MessageSquare className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
-            </Card>
-          ))}
-        </div>
+              </Card>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
