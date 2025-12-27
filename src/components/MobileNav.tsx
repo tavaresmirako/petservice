@@ -24,7 +24,7 @@ const MobileNav = () => {
       </SheetTrigger>
       <SheetContent 
         side="right" 
-        className="w-[250px] bg-white dark:bg-[#1a1a1a] text-foreground border-l border-border transition-colors duration-300"
+        className="w-[250px] bg-white dark:bg-black text-foreground border-l border-border transition-colors duration-300"
       >
         <SheetHeader>
           <SheetTitle className="text-foreground border-b pb-2 text-left">Menu</SheetTitle>
