@@ -22,9 +22,12 @@ const MobileNav = () => {
           <span className="sr-only">Toggle navigation menu</span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="right" className="w-[250px] bg-white/90 dark:bg-black/90 backdrop-blur-md border-l border-white/20">
+      <SheetContent 
+        side="right" 
+        className="w-[250px] bg-white dark:bg-[#1a1a1a] text-foreground border-l border-border transition-colors duration-300"
+      >
         <SheetHeader>
-          <SheetTitle className="text-foreground border-b pb-2">Menu</SheetTitle>
+          <SheetTitle className="text-foreground border-b pb-2 text-left">Menu</SheetTitle>
         </SheetHeader>
         <nav className="flex flex-col gap-4 mt-6">
           {navItems.map((item) => (
