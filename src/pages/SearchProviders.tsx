@@ -70,9 +70,9 @@ const SearchProviders = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-secondary">
+    <div className="min-h-screen bg-transparent relative">
       <header 
-        className="py-6 shadow-md"
+        className="py-6 shadow-md relative z-10"
         style={{ background: 'var(--gradient-header)' }}
       >
         <div className="container mx-auto px-4 flex justify-between items-center">
@@ -97,12 +97,12 @@ const SearchProviders = () => {
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 relative z-10">
         <h1 className="text-4xl font-bold text-center mb-8 text-foreground">
           Encontre o Profissional Ideal
         </h1>
 
-        <Card className="p-6 mb-8 bg-card">
+        <Card className="p-6 mb-8 bg-white/60 dark:bg-black/40 backdrop-blur-md">
           <div className="grid md:grid-cols-3 gap-4">
             <div className="relative">
               <Search className="absolute left-3 top-3 w-5 h-5 text-muted-foreground" />
@@ -110,12 +110,12 @@ const SearchProviders = () => {
                 placeholder="Buscar por nome ou descrição..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
+                className="pl-10 bg-white/50 dark:bg-black/20"
               />
             </div>
 
             <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger>
+              <SelectTrigger className="bg-white/50 dark:bg-black/20">
                 <SelectValue placeholder="Categoria" />
               </SelectTrigger>
               <SelectContent>
@@ -129,7 +129,7 @@ const SearchProviders = () => {
             </Select>
 
             <Select value={selectedCity} onValueChange={setSelectedCity}>
-              <SelectTrigger>
+              <SelectTrigger className="bg-white/50 dark:bg-black/20">
                 <SelectValue placeholder="Cidade" />
               </SelectTrigger>
               <SelectContent>
@@ -146,7 +146,7 @@ const SearchProviders = () => {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredProviders.map((provider) => (
-            <Card key={provider.id} className="overflow-hidden hover:shadow-lg transition-all bg-card">
+            <Card key={provider.id} className="overflow-hidden hover:shadow-lg transition-all bg-white/60 dark:bg-black/40 backdrop-blur-md">
               <div className="p-6">
                 <div className="flex justify-between items-start mb-4">
                   <div>
@@ -186,7 +186,7 @@ const SearchProviders = () => {
 
                 <div className="flex gap-2">
                   <Button
-                    className="flex-1 bg-client hover:bg-client/90"
+                    className="flex-1 btn-theme-adaptive"
                     onClick={() => navigate(`/provider/${provider.id}`)}
                   >
                     Ver Perfil
@@ -210,14 +210,6 @@ const SearchProviders = () => {
             </Card>
           ))}
         </div>
-
-        {filteredProviders.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-xl text-muted-foreground">
-              Nenhum prestador encontrado com os filtros selecionados.
-            </p>
-          </div>
-        )}
       </div>
     </div>
   );
