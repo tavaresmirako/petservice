@@ -32,10 +32,40 @@ const SearchProviders = () => {
     if (categoryParam && categoryNames[categoryParam]) {
       setSelectedCategory(categoryParam);
     }
-    fetchProviders();
   }, [searchParams]);
 
+  useEffect(() => {
+    fetchProviders();
+  }, [selectedCategory, selectedCity]);
+
   const fetchProviders = async () => {
+    // Se houver uma categoria selecionada, usamos a RPC otimizada
+    if (selectedCategory !== "all") {
+      const { data, error } = await supabase.rpc('search_providers_optimized', {
+        p_category: selectedCategory,
+        p_city: selectedCity === "all" ? null : selectedCity
+      });
+
+      if (!error && data) {
+        // Mapear os dados da RPC para o formato esperado pelo componente
+        const mappedData = data.map((item: any) => ({
+          id: item.provider_id,
+          business_name: item.name,
+          rating: item.rating,
+          review_count: item.review_count,
+          profiles: {
+            full_name: item.name,
+            city: item.city,
+            state: "" // A RPC não retorna o estado, mas podemos ajustar se necessário
+          },
+          services: [{ category: selectedCategory }]
+        }));
+        setProviders(mappedData);
+        return;
+      }
+    }
+
+    // Fallback para busca geral se nenhuma categoria estiver selecionada ou se a RPC falhar
     const { data, error } = await supabase
       .from("providers")
       .select(`
