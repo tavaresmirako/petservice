@@ -14,7 +14,8 @@ import {
   Home, 
   GraduationCap, 
   Stethoscope, 
-  Car
+  Car,
+  Heart
 } from "lucide-react";
 
 const Index = () => {
@@ -23,7 +24,7 @@ const Index = () => {
     { icon: Bath, title: "Banho e Tosa", description: "Cuidados especializados" },
     { icon: Stethoscope, title: "Veterinário", description: "Cuidados médicos para seu pet" },
     { icon: Car, title: "Táxi Pet", description: "Transporte seguro" },
-    { icon: null, title: "", description: "", hidden: true }, // Espaço vazio para manter o alinhamento
+    { icon: null, title: "", description: "", hidden: true },
     { icon: GraduationCap, title: "Adestramento", description: "Treinamento profissional" },
     { icon: Home, title: "Hospedagem", description: "Aconchego e segurança" },
   ];
@@ -103,7 +104,7 @@ const Index = () => {
               return (
                 <Card 
                   key={index} 
-                  className="p-6 text-center hover:shadow-lg transition-all duration-300 cursor-pointer group bg-white/60 dark:bg-black/40 backdrop-blur-md"
+                  className="p-6 text-center card-neon-hover cursor-pointer group bg-white/60 dark:bg-black/40 backdrop-blur-md border-2 border-transparent"
                 >
                   <div className="flex justify-center mb-3">
                     <div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors">

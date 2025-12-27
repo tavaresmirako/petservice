@@ -20,6 +20,9 @@
     --btn-bg: #1a1a1a;
     --btn-text: #ffffff;
     --btn-hover: #333333;
+
+    /* Neon: Escuro no modo claro */
+    --neon-glow: 0 0 15px rgba(0, 0, 0, 0.4), 0 0 30px rgba(0, 0, 0, 0.2);
     
     --background: 0 0% 100% / 0;
     --foreground: 0 0% 9%;
@@ -44,6 +47,9 @@
     --btn-bg: #f0f0f0;
     --btn-text: #1a1a1a;
     --btn-hover: #ffffff;
+
+    /* Neon: Claro no modo escuro */
+    --neon-glow: 0 0 20px rgba(255, 255, 255, 0.6), 0 0 40px rgba(255, 255, 255, 0.3);
 
     --foreground: 0 0% 98%;
     --card: 0 0% 12% / 0.8;
@@ -79,4 +85,15 @@
 
 .btn-theme-adaptive:hover {
   background-color: var(--btn-hover) !important;
+}
+
+/* Efeito Neon nos Cards */
+.card-neon-hover {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.card-neon-hover:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: var(--neon-glow) !important;
+  border-color: var(--text-color) !important;
 }
