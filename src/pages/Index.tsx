@@ -41,12 +41,6 @@ const Index = () => {
             Cuidado completo, carinho e serviços especializados para seus animais.
           </p>
           <div className="flex items-center gap-4">
-            {/* Desktop Nav */}
-            <nav className="hidden lg:flex items-center gap-6 mr-4">
-              <Link to="/login/provider" className="text-white hover:text-white/80 font-medium transition-colors">
-                Sou Prestador de Serviço
-              </Link>
-            </nav>
             <MobileNav />
           </div>
         </div>
