@@ -1,0 +1,82 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Tema Claro (Padrão) */
+    --bg-start: #f0f0f0;
+    --bg-end: #e0e0e0;
+    --paw-color: rgba(0, 0, 0, 0.85);
+    --card-bg: rgba(255, 255, 255, 0.7);
+    --text-color: #1a1a1a;
+    
+    /* Botões: Escuros no modo claro */
+    --btn-bg: #1a1a1a;
+    --btn-text: #ffffff;
+    --btn-hover: #333333;
+    
+    --background: 0 0% 100% / 0;
+    --foreground: 0 0% 9%;
+    --card: 0 0% 100% / 0.7;
+    --card-foreground: 0 0% 9%;
+    --primary: 161 93% 30%;
+    --primary-foreground: 151 80% 95%;
+    --border: 0 0% 83%;
+    --radius: 0.75rem;
+    --gradient-header: linear-gradient(135deg, hsl(210 100% 50%), hsl(16 90% 58%));
+  }
+
+  [data-theme="dark"] {
+    /* Tema Escuro */
+    --bg-start: #1a1a1a;
+    --bg-end: #0d0d0d;
+    --paw-color: rgba(255, 255, 255, 0.7);
+    --card-bg: rgba(30, 30, 30, 0.8);
+    --text-color: #f0f0f0;
+
+    /* Botões: Claros no modo escuro */
+    --btn-bg: #f0f0f0;
+    --btn-text: #1a1a1a;
+    --btn-hover: #ffffff;
+
+    --foreground: 0 0% 98%;
+    --card: 0 0% 12% / 0.8;
+    --card-foreground: 0 0% 98%;
+    --border: 0 0% 25%;
+  }
+
+  body {
+    @apply bg-transparent;
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    transition: color 0.3s ease;
+  }
+}
+
+.text-neon {
+  text-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #00f, 0 0 20px #00f, 0 0 25px #00f, 0 0 30px #00f, 0 0 35px #00f;
+  color: #fff;
+}
+
+/* Utilitários para o Toggle */
+.icon-sun { display: none; }
+[data-theme="dark"] .icon-moon { display: none; }
+[data-theme="dark"] .icon-sun { display: block; }
+
+/* Classe utilitária para os botões de tema */
+.btn-theme-adaptive {
+  background-color: var(--btn-bg) !important;
+  color: var(--btn-text) !important;
+  transition: all 0.3s ease !important;
+}
+
+.btn-theme-adaptive:hover {
+  background-color: var(--btn-hover) !important;
+}
